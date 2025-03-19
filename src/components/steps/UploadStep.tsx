@@ -2,8 +2,7 @@
 "use client";
 
 import type React from "react";
-
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useML } from "@/context/MLContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Database, UploadIcon } from "lucide-react";
+import { UploadIcon, File } from "lucide-react";
 import { uploadFiles } from "@/services/api";
 import { ViewDatasetInfo } from "@/components/ViewDatasetInfo";
+import { motion } from "motion/react";
 
 export function UploadStep() {
   const {
@@ -33,6 +33,7 @@ export function UploadStep() {
     setProgress,
   } = useML();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -44,6 +45,7 @@ export function UploadStep() {
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setIsDragging(false);
     const droppedFiles = Array.from(e.dataTransfer.files);
     if (droppedFiles.length) {
       setFiles(droppedFiles);
@@ -99,107 +101,109 @@ export function UploadStep() {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
   };
 
   return (
     <>
       <ViewDatasetInfo />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Upload Datasets</CardTitle>
-          <CardDescription>
-            Upload your CSV files to begin the ML training process
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
-              isLoading
-                ? "opacity-50 pointer-events-none"
-                : "border-muted-foreground/25 hover:border-primary/50"
-            }`}
-          >
-            <div className="flex flex-col items-center justify-center gap-4">
-              <UploadIcon className="h-12 w-12 text-muted-foreground" />
-              <h3 className="text-lg font-medium">Drag & Drop Files</h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Drag and drop your CSV files here, or click to browse your files
-              </p>
-              <input
-                type="file"
-                accept=".csv"
-                multiple
-                onChange={handleFileChange}
-                className="hidden"
-                ref={fileInputRef}
-              />
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isLoading}
-              >
-                Select Files
-              </Button>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="border border-orange-100 shadow-md overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
+            <CardTitle className="text-2xl text-gray-800">
+              Upload Datasets
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              Upload your CSV files to begin the ML training process
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
+                isDragging
+                  ? "border-[#FF5722] bg-orange-50"
+                  : isLoading
+                  ? "opacity-50 pointer-events-none"
+                  : "border-gray-200 hover:border-[#FF5722]/50 hover:bg-orange-50/30"
+              }`}
+            >
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 bg-[#FF5722]/10 rounded-full flex items-center justify-center">
+                  <UploadIcon className="h-8 w-8 text-[#FF5722]" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-800">
+                  Drag & Drop Files
+                </h3>
+                <p className="text-sm text-gray-600 max-w-xs">
+                  Drag and drop your CSV files here, or click to browse your
+                  files
+                </p>
+                <input
+                  type="file"
+                  accept=".csv"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                  ref={fileInputRef}
+                />
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading}
+                  className="bg-[#FF5722] hover:bg-[#F4511E] text-white"
+                >
+                  Select Files
+                </Button>
+              </div>
             </div>
-          </div>
 
-          {files.length > 0 && (
-            <div className="mt-6">
-              <h4 className="font-medium mb-2">Selected Files:</h4>
-              <ul className="space-y-2">
-                {files.map(
-                  (
-                    file: {
-                      name:
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | React.ReactElement<
-                            unknown,
-                            string | React.JSXElementConstructor<any>
-                          >
-                        | Iterable<React.ReactNode>
-                        | React.ReactPortal
-                        | Promise<
-                            | string
-                            | number
-                            | bigint
-                            | boolean
-                            | React.ReactPortal
-                            | React.ReactElement<
-                                unknown,
-                                string | React.JSXElementConstructor<any>
-                              >
-                            | Iterable<React.ReactNode>
-                            | null
-                            | undefined
-                          >
-                        | null
-                        | undefined;
-                      size: number;
-                    },
-                    index: React.Key | null | undefined
-                  ) => (
-                    <li
+            {files.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="mt-8"
+              >
+                <h4 className="font-medium mb-3 text-gray-800">
+                  Selected Files:
+                </h4>
+                <div className="space-y-3">
+                  {files.map((file, index) => (
+                    <motion.div
                       key={index}
-                      className="flex items-center gap-2 p-2 bg-muted rounded-md"
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center gap-3 p-3 bg-white rounded-md border border-orange-100 shadow-sm"
                     >
-                      <Database className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{file.name}</span>
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {(file.size / 1024).toFixed(1)} KB
-                      </span>
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        <File className="h-5 w-5 text-[#FF5722]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-sm">{file.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {(file.size / 1024).toFixed(1)} KB
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
     </>
   );
 }

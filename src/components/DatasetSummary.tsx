@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-// Update the DatasetSummary component to include a button to view column info
 import { useML } from "@/context/MLContext";
 import {
   Card,
@@ -10,9 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Database, Table } from "lucide-react";
+import { Database, Table, LineChart, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { motion } from "motion/react";
 
 export function DatasetSummary() {
   const { summaries, insights, activeStep } = useML();
@@ -32,123 +32,188 @@ export function DatasetSummary() {
   };
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle>Dataset Summary</CardTitle>
-        <CardDescription>Overview of your uploaded datasets</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          {Object.entries(summaries).map(
-            ([filename, summary]: [string, any]) => (
-              <div
-                key={filename}
-                className="pb-6 border-b last:border-0 last:pb-0"
-              >
-                <h4 className="text-lg font-medium flex items-center gap-2 mb-3">
-                  <Database className="h-4 w-4" />
-                  {filename}
-                </h4>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <h5 className="text-sm font-medium mb-2">Basic Info</h5>
-                    <ul className="text-sm space-y-1">
-                      <li>
-                        <span className="font-medium">Rows:</span>{" "}
-                        {summary.summary.rows}
-                      </li>
-                      <li>
-                        <span className="font-medium">Columns:</span>{" "}
-                        {summary.summary.columns.length}
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h5 className="text-sm font-medium mb-2">
-                      Suggested Analysis
-                    </h5>
-                    <ul className="text-sm space-y-1">
-                      <li>
-                        <span className="font-medium">Task Type:</span>{" "}
-                        {summary.suggested_task_type}
-                      </li>
-                      <li>
-                        <span className="font-medium">Target Column:</span>{" "}
-                        {summary.suggested_target_column || "None"}
-                      </li>
-                      <li>
-                        <span className="font-medium">Missing Strategy:</span>{" "}
-                        {summary.suggested_missing_strategy}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mb-3 flex items-center gap-2"
-                  onClick={() => toggleColumnInfo(filename)}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <Card className="mt-8 border border-orange-100 shadow-md overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
+          <CardTitle className="text-2xl text-gray-800">
+            Dataset Summary
+          </CardTitle>
+          <CardDescription className="text-gray-600">
+            Overview of your uploaded datasets
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            {Object.entries(summaries).map(
+              ([filename, summary]: [string, any], fileIndex) => (
+                <motion.div
+                  key={filename}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * fileIndex }}
+                  className="pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
-                  <Table className="h-4 w-4" />
-                  {showColumnInfo[filename]
-                    ? "Hide Column Info"
-                    : "View Column Info"}
-                </Button>
-
-                {showColumnInfo[filename] && (
-                  <div className="mb-4 bg-muted/50 p-3 rounded-md">
-                    <h5 className="text-sm font-medium mb-2">
-                      Column Information
-                    </h5>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="text-left py-2 px-3 font-medium">
-                              Column Name
-                            </th>
-                            <th className="text-left py-2 px-3 font-medium">
-                              Data Type
-                            </th>
-                            <th className="text-left py-2 px-3 font-medium">
-                              Missing Values
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {summary.summary.columns.map((column: string) => (
-                            <tr key={column} className="border-b last:border-0">
-                              <td className="py-2 px-3">{column}</td>
-                              <td className="py-2 px-3">
-                                {summary.summary.data_types[column]}
-                              </td>
-                              <td className="py-2 px-3">
-                                {summary.summary.missing_values[column] || 0}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mt-1">
+                      <Database className="h-5 w-5 text-[#FF5722]" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-medium text-gray-800">
+                        {filename}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        {summary.summary.rows} rows,{" "}
+                        {summary.summary.columns.length} columns
+                      </p>
                     </div>
                   </div>
-                )}
 
-                {insights[filename] && (
-                  <div>
-                    <h5 className="text-sm font-medium mb-2">Insights</h5>
-                    <p className="text-sm bg-muted/50 p-3 rounded-md">
-                      {insights[filename]}
-                    </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pl-12">
+                    <div className="bg-white p-4 rounded-lg border border-orange-100 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <LineChart className="h-4 w-4 text-[#FF5722]" />
+                        <h5 className="text-sm font-medium text-gray-700">
+                          Suggested Analysis
+                        </h5>
+                      </div>
+                      <ul className="text-sm space-y-2">
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">Task Type:</span>
+                          <span className="font-medium">
+                            {summary.suggested_task_type}
+                          </span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">Target Column:</span>
+                          <span className="font-medium">
+                            {summary.suggested_target_column || "None"}
+                          </span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">
+                            Missing Strategy:
+                          </span>
+                          <span className="font-medium">
+                            {summary.suggested_missing_strategy}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {insights[filename] && (
+                      <div className="bg-white p-4 rounded-lg border border-orange-100 shadow-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Lightbulb className="h-4 w-4 text-[#FF5722]" />
+                          <h5 className="text-sm font-medium text-gray-700">
+                            AI Insights
+                          </h5>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {Array.isArray(insights[filename]) ? (
+                            <ul className="space-y-1 list-disc pl-4">
+                              {insights[filename].map((insight, i) => (
+                                <li key={i}>{insight}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>{insights[filename]}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )
-          )}
-        </div>
-      </CardContent>
-    </Card>
+
+                  <div className="pl-12">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mb-4 border-[#FF5722] text-[#FF5722] hover:bg-orange-50 flex items-center gap-2"
+                      onClick={() => toggleColumnInfo(filename)}
+                    >
+                      <Table className="h-4 w-4" />
+                      {showColumnInfo[filename]
+                        ? "Hide Column Info"
+                        : "View Column Info"}
+                    </Button>
+
+                    {showColumnInfo[filename] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        transition={{ duration: 0.3 }}
+                        className="mb-4 bg-white p-4 rounded-lg border border-orange-100 shadow-sm overflow-hidden"
+                      >
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">
+                          Column Information
+                        </h5>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="bg-gray-50 border-b border-gray-200">
+                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                                  Column Name
+                                </th>
+                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                                  Data Type
+                                </th>
+                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                                  Missing Values
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {summary.summary.columns.map(
+                                (column: string, colIndex: number) => (
+                                  <tr
+                                    key={column}
+                                    className={`border-b last:border-0 ${
+                                      colIndex % 2 === 0
+                                        ? "bg-white"
+                                        : "bg-gray-50"
+                                    }`}
+                                  >
+                                    <td className="py-2 px-3 text-gray-800">
+                                      {column}
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-600 font-mono text-xs">
+                                      {summary.summary.data_types[column]}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      {summary.summary.missing_values[
+                                        column
+                                      ] ? (
+                                        <span className="px-2 py-1 bg-red-50 text-red-500 rounded-full text-xs">
+                                          {
+                                            summary.summary.missing_values[
+                                              column
+                                            ]
+                                          }
+                                        </span>
+                                      ) : (
+                                        <span className="px-2 py-1 bg-green-50 text-green-500 rounded-full text-xs">
+                                          0
+                                        </span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </motion.div>
+              )
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

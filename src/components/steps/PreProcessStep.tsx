@@ -12,8 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileDown } from "lucide-react";
+import { FileDown, Wand2, SlidersHorizontal, Tag } from "lucide-react";
 import { preprocessData, getDownloadPreprocessedUrl } from "@/services/api";
+import { motion } from "motion/react";
 
 export function PreprocessStep() {
   const {
@@ -102,88 +103,155 @@ export function PreprocessStep() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Preprocess Data</CardTitle>
-        <CardDescription>
-          Configure preprocessing options for your datasets
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Missing Values Strategy
-            </label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Suggested: {Object.values(suggestedMissingStrategies).join(", ")}
-            </p>
-            <select
-              value={missingStrategy}
-              onChange={(e) => setMissingStrategy(e.target.value)}
-              className="w-full p-2 rounded-md border border-input bg-background"
-              disabled={isLoading}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="border border-orange-100 shadow-md overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
+          <CardTitle className="text-2xl text-gray-800">
+            Preprocess Data
+          </CardTitle>
+          <CardDescription className="text-gray-600">
+            Configure preprocessing options for your datasets
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 space-y-8">
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
             >
-              <option value="mean">Mean</option>
-              <option value="median">Median</option>
-              <option value="mode">Mode</option>
-              <option value="drop">Drop</option>
-            </select>
-          </div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Wand2 className="h-5 w-5 text-[#FF5722]" />
+                </div>
+                <h3 className="font-medium text-gray-800">
+                  Missing Values Strategy
+                </h3>
+              </div>
 
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={scaling}
-                onChange={(e) => setScaling(e.target.checked)}
-                className="rounded border-input"
+              {suggestedMissingStrategies &&
+                Object.values(suggestedMissingStrategies).length > 0 && (
+                  <div className="mb-3">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-[#FF5722]">
+                      Suggested:{" "}
+                      {Object.values(suggestedMissingStrategies).join(", ")}
+                    </span>
+                  </div>
+                )}
+
+              <select
+                value={missingStrategy}
+                onChange={(e) => setMissingStrategy(e.target.value)}
+                className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
                 disabled={isLoading}
-              />
-              <span className="text-sm font-medium">Enable Scaling</span>
-            </label>
-            <p className="text-xs text-muted-foreground mt-1 ml-6">
-              Standardize numeric features to have zero mean and unit variance
-            </p>
-          </div>
+              >
+                <option value="mean">Mean</option>
+                <option value="median">Median</option>
+                <option value="mode">Mode</option>
+                <option value="drop">Drop</option>
+              </select>
+              <p className="mt-2 text-xs text-gray-500">
+                {missingStrategy === "mean" &&
+                  "Replace missing values with the mean of the column"}
+                {missingStrategy === "median" &&
+                  "Replace missing values with the median of the column"}
+                {missingStrategy === "mode" &&
+                  "Replace missing values with the most frequent value"}
+                {missingStrategy === "drop" &&
+                  "Remove rows with missing values"}
+              </p>
+            </motion.div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Encoding Method
-            </label>
-            <select
-              value={encoding}
-              onChange={(e) => setEncoding(e.target.value)}
-              className="w-full p-2 rounded-md border border-input bg-background"
-              disabled={isLoading}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
             >
-              <option value="onehot">One-Hot Encoding</option>
-              <option value="label">Label Encoding</option>
-              <option value="target">Target Encoding</option>
-              <option value="kfold">K-Fold Target Encoding</option>
-            </select>
-            <p className="text-xs text-muted-foreground mt-1">
-              {encoding === "target" &&
-                "Target encoding uses the target variable to encode categorical features"}
-              {encoding === "kfold" &&
-                "K-Fold target encoding prevents data leakage by using cross-validation"}
-              {encoding === "label" &&
-                "Label encoding converts categories to numeric values"}
-              {encoding === "onehot" &&
-                "One-hot encoding creates binary columns for each category"}
-            </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <SlidersHorizontal className="h-5 w-5 text-[#FF5722]" />
+                </div>
+                <h3 className="font-medium text-gray-800">
+                  Scaling & Encoding
+                </h3>
+              </div>
+
+              <div className="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  id="scaling"
+                  checked={scaling}
+                  onChange={(e) => setScaling(e.target.checked)}
+                  className="w-4 h-4 text-[#FF5722] border-gray-300 rounded focus:ring-[#FF5722]"
+                  disabled={isLoading}
+                />
+                <label
+                  htmlFor="scaling"
+                  className="ml-2 text-sm font-medium text-gray-700"
+                >
+                  Enable Scaling
+                </label>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">
+                Standardize numeric features to have zero mean and unit variance
+              </p>
+
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Encoding Method
+                </label>
+                <select
+                  value={encoding}
+                  onChange={(e) => setEncoding(e.target.value)}
+                  className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
+                  disabled={isLoading}
+                >
+                  <option value="onehot">One-Hot Encoding</option>
+                  <option value="label">Label Encoding</option>
+                  <option value="target">Target Encoding</option>
+                  <option value="kfold">K-Fold Target Encoding</option>
+                </select>
+              </div>
+              <p className="text-xs text-gray-500">
+                {encoding === "target" &&
+                  "Target encoding uses the target variable to encode categorical features"}
+                {encoding === "kfold" &&
+                  "K-Fold target encoding prevents data leakage by using cross-validation"}
+                {encoding === "label" &&
+                  "Label encoding converts categories to numeric values"}
+                {encoding === "onehot" &&
+                  "One-hot encoding creates binary columns for each category"}
+              </p>
+            </motion.div>
           </div>
 
           {isTargetEncodingMethod && (
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Target Column (Required for{" "}
-                {encoding === "target" ? "Target" : "K-Fold"} Encoding)
-              </label>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Tag className="h-5 w-5 text-[#FF5722]" />
+                </div>
+                <h3 className="font-medium text-gray-800">
+                  Target Column (Required for{" "}
+                  {encoding === "target" ? "Target" : "K-Fold"} Encoding)
+                </h3>
+              </div>
+
               <select
                 value={targetColumn}
                 onChange={(e) => setTargetColumn(e.target.value)}
-                className="w-full p-2 rounded-md border border-input bg-background"
+                className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
                 disabled={isLoading}
               >
                 <option value="">Select Target Column</option>
@@ -196,32 +264,32 @@ export function PreprocessStep() {
                     </option>
                   ))}
               </select>
-            </div>
+            </motion.div>
           )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-4">
-        <Button
-          onClick={handlePreprocess}
-          className="w-full"
-          disabled={isLoading}
-        >
-          {isLoading ? "Processing..." : "Preprocess Data"}
-        </Button>
-
-        {files.map((file: File) => (
+        </CardContent>
+        <CardFooter className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
           <Button
-            key={file.name}
-            variant="outline"
-            onClick={() => handleDownloadPreprocessed(file.name)}
-            className="w-full"
+            onClick={handlePreprocess}
+            className="w-full bg-[#FF5722] hover:bg-[#F4511E] text-white h-12 text-base font-medium"
             disabled={isLoading}
           >
-            <FileDown className="mr-2 h-4 w-4" />
-            Download Preprocessed {file.name}
+            {isLoading ? "Processing..." : "Preprocess Data"}
           </Button>
-        ))}
-      </CardFooter>
-    </Card>
+
+          {files.map((file: File) => (
+            <Button
+              key={file.name}
+              variant="outline"
+              onClick={() => handleDownloadPreprocessed(file.name)}
+              className="w-full border-[#FF5722] text-[#FF5722] hover:bg-orange-50"
+              disabled={isLoading}
+            >
+              <FileDown className="mr-2 h-4 w-4" />
+              Download Preprocessed {file.name}
+            </Button>
+          ))}
+        </CardFooter>
+      </Card>
+    </motion.div>
   );
 }

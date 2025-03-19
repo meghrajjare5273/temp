@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useML } from "@/context/MLContext";
 import { Upload, Cog, Brain, BarChart3 } from "lucide-react";
 import type { Step } from "@/types";
+import { motion } from "motion/react";
 
 export function ProgressSteps() {
-  const { activeStep, setActiveStep, summaries } = useML();
+  const { activeStep } = useML();
 
   const steps: Step[] = [
     {
@@ -28,33 +28,46 @@ export function ProgressSteps() {
   ];
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-2">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex flex-col items-center">
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                steps.findIndex((s) => s.id === activeStep) >= index
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {step.icon}
+    <div className="mb-10">
+      <div className="flex items-center justify-between mb-4">
+        {steps.map((step, index) => {
+          const isActive = steps.findIndex((s) => s.id === activeStep) >= index;
+          return (
+            <div key={step.id} className="flex flex-col items-center">
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: isActive ? 1.05 : 1 }}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                  isActive
+                    ? "bg-[#FF5722] text-white shadow-md"
+                    : "bg-gray-100 text-gray-400"
+                }`}
+              >
+                {step.icon}
+              </motion.div>
+              <span
+                className={`text-xs mt-2 hidden sm:block font-medium ${
+                  isActive ? "text-[#FF5722]" : "text-gray-500"
+                }`}
+              >
+                {step.label}
+              </span>
             </div>
-            <span className="text-xs mt-1 hidden sm:block">{step.label}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
-      <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-        <div
-          className="absolute h-full bg-primary transition-all duration-300"
-          style={{
+      <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: "0%" }}
+          animate={{
             width: `${
               (steps.findIndex((s) => s.id === activeStep) /
                 (steps.length - 1)) *
               100
             }%`,
           }}
+          transition={{ duration: 0.5 }}
+          className="absolute h-full bg-[#FF5722]"
         />
       </div>
     </div>
