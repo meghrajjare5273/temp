@@ -7,6 +7,7 @@ from ml.preprocess import preprocess_data, save_preprocessed_data, suggest_missi
 from ml.models import train_model, save_model
 from ml.utils import get_dataset_insights
 from dotenv import load_dotenv
+import uvicorn
 
 load_dotenv()
 app = FastAPI()
@@ -135,3 +136,7 @@ async def download_preprocessed(filename: str):
     except Exception as e:
         print(f"Error in /download-preprocessed endpoint: {str(e)}")
         return JSONResponse(content={"error": f"Download failed: {str(e)}"}, status_code=500)
+    
+
+if __name__ == "__main__":
+    uvicorn.run(app, port=8000)
