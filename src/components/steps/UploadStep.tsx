@@ -161,7 +161,7 @@ export function UploadStep() {
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading}
-                  className="bg-primary hover:bg-primary-600 text-white"
+                  className="bg-primary hover:bg-secondary/90 hover:text-white text-black "
                 >
                   Select Files
                 </Button>

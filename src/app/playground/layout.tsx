@@ -18,12 +18,12 @@ export default function PlaygroundLayout({
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
           </Link>
-          <div className="flex items-center justify-center flex-1">
-            <div className="w-8 h-8 rounded-full border border-white flex items-center justify-center mr-2">
-              <div className="w-4 h-4 bg-primary rounded-full"></div>
-            </div>
-            <h1 className="text-xl font-bold text-white">ML Platform</h1>
-          </div>
+          {/* <div className="flex items-center justify-center flex-1"> */}
+          {/* <div className="w-8 h-8 rounded-full border border-white flex items-center justify-center mr-2"> */}
+          {/* <div className="w-4 h-4 bg-primary rounded-full"></div> */}
+          {/* </div> */}
+          {/* <h1 className="text-xl font-bold text-white">ML Platform</h1> */}
+          {/* </div> */}
           <div className="w-24"></div> {/* Spacer for centering */}
         </div>
       </div>

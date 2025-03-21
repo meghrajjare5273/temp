@@ -12,18 +12,42 @@ export function ProgressSteps() {
     {
       id: "upload",
       label: "Upload Datasets",
-      icon: <Upload className="h-5 w-5" />,
+      icon: (
+        <Upload
+          className="h-5 w-5"
+          color={activeStep === "upload" ? "black" : "grey"}
+        />
+      ),
     },
     {
       id: "preprocess",
       label: "Preprocess Data",
-      icon: <Cog className="h-5 w-5" />,
+      icon: (
+        <Cog
+          className="h-5 w-5"
+          color={activeStep === "preprocess" ? "black" : "grey"}
+        />
+      ),
     },
-    { id: "train", label: "Train Models", icon: <Brain className="h-5 w-5" /> },
+    {
+      id: "train",
+      label: "Train Models",
+      icon: (
+        <Brain
+          className="h-5 w-5"
+          color={activeStep === "train" ? "black" : "grey"}
+        />
+      ),
+    },
     {
       id: "visualize",
       label: "Visualize Results",
-      icon: <BarChart3 className="h-5 w-5" />,
+      icon: (
+        <BarChart3
+          className="h-5 w-5"
+          color={activeStep === "visualize" ? "black" : "grey"}
+        />
+      ),
     },
   ];
 

@@ -12,10 +12,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileDown, Brain, Target, List } from "lucide-react";
+import {
+  FileDown,
+  Brain,
+  Target,
+  List,
+  Info,
+  AlertTriangle,
+} from "lucide-react";
 import { trainModel, getDownloadModelUrl } from "@/services/api";
 import { getAvailableModels } from "@/utils/model-utils";
 import { motion } from "motion/react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function TrainStep() {
   const {
@@ -105,32 +113,40 @@ export function TrainStep() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="border border-orange-100 shadow-md overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
-          <CardTitle className="text-2xl text-gray-800">Train Models</CardTitle>
-          <CardDescription className="text-gray-600">
+      <Card className="border border-white/10 bg-secondary-50 shadow-md overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-50 border-b border-white/10">
+          <CardTitle className="text-2xl text-white">Train Models</CardTitle>
+          <CardDescription className="text-white/70">
             Configure and train machine learning models on your data
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-8">
+          <Alert className="bg-primary/10 border-primary/20">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertDescription className="text-white">
+              We&apos;ve pre-selected models based on your data. Select the task
+              type and model to continue.
+            </AlertDescription>
+          </Alert>
+
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
+              className="bg-secondary-100 p-5 rounded-lg border border-white/10 shadow-sm"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Brain className="h-5 w-5 text-[#FF5722]" />
+                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Brain className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="font-medium text-gray-800">ML Task Type</h3>
+                <h3 className="font-medium text-white">ML Task Type</h3>
               </div>
 
               {suggestedTaskTypes &&
                 Object.values(suggestedTaskTypes).length > 0 && (
                   <div className="mb-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-[#FF5722]">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary">
                       Suggested: {Object.values(suggestedTaskTypes).join(", ")}
                     </span>
                   </div>
@@ -139,15 +155,26 @@ export function TrainStep() {
               <select
                 value={taskType}
                 onChange={(e) => setTaskType(e.target.value)}
-                className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
+                className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
                 disabled={isLoading}
               >
-                <option value="">Select Task Type</option>
-                <option value="classification">Classification</option>
-                <option value="regression">Regression</option>
-                <option value="clustering">Clustering</option>
+                <option className="bg-primary text-black" value="">
+                  Select Task Type
+                </option>
+                <option
+                  className="bg-primary text-black"
+                  value="classification"
+                >
+                  Classification
+                </option>
+                <option className="bg-primary text-black" value="regression">
+                  Regression
+                </option>
+                <option className="bg-primary text-black" value="clustering">
+                  Clustering
+                </option>
               </select>
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-white/50">
                 {taskType === "classification" &&
                   "Predict a category or class from input features"}
                 {taskType === "regression" &&
@@ -163,20 +190,20 @@ export function TrainStep() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
+              className="bg-secondary-100 p-5 rounded-lg border border-white/10 shadow-sm"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Target className="h-5 w-5 text-[#FF5722]" />
+                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Target className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="font-medium text-gray-800">Target Column</h3>
+                <h3 className="font-medium text-white">Target Column</h3>
               </div>
 
               {suggestedTargetColumns &&
                 Object.values(suggestedTargetColumns).filter((v) => v).length >
                   0 && (
                   <div className="mb-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-[#FF5722]">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary">
                       Suggested:{" "}
                       {Object.values(suggestedTargetColumns)
                         .filter((v) => v)
@@ -188,20 +215,26 @@ export function TrainStep() {
               <select
                 value={targetColumn}
                 onChange={(e) => setTargetColumn(e.target.value)}
-                className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
+                className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
                 disabled={isLoading}
               >
-                <option value="">None (Unsupervised)</option>
+                <option className="bg-primary text-black" value="">
+                  None (Unsupervised)
+                </option>
                 {Object.values(summaries)
                   .flatMap((s: any) => s.summary.columns)
                   .filter((v: any, i: any, a: any) => a.indexOf(v) === i)
                   .map((col: string) => (
-                    <option key={col} value={col}>
+                    <option
+                      className="bg-primary text-black"
+                      key={col}
+                      value={col}
+                    >
                       {col}
                     </option>
                   ))}
               </select>
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-white/50">
                 {targetColumn
                   ? "The column your model will learn to predict"
                   : "Select 'None' for unsupervised learning like clustering"}
@@ -214,38 +247,51 @@ export function TrainStep() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white p-5 rounded-lg border border-orange-100 shadow-sm"
+              className="bg-secondary-100 p-5 rounded-lg border border-white/10 shadow-sm"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <List className="h-5 w-5 text-[#FF5722]" />
+                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                  <List className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="font-medium text-gray-800">Model Type</h3>
+                <h3 className="font-medium text-white">Model Type</h3>
               </div>
 
               <select
                 value={modelType}
                 onChange={(e) => setModelType(e.target.value)}
-                className="w-full p-3 rounded-md border border-gray-200 bg-white focus:border-[#FF5722] focus:ring focus:ring-[#FF5722]/20 transition-all"
+                className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
                 disabled={isLoading}
               >
                 {getAvailableModels(taskType).map((model) => (
-                  <option key={model.key} value={model.key}>
+                  <option
+                    className="bg-primary text-black"
+                    key={model.key}
+                    value={model.key}
+                  >
                     {model.display}
                   </option>
                 ))}
               </select>
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-white/50">
                 Different model types have different strengths and weaknesses
               </p>
             </motion.div>
           )}
+
+          {!taskType && (
+            <Alert className="bg-secondary-200 border-yellow-600/30">
+              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              <AlertDescription className="text-white/70">
+                Please select a task type to continue
+              </AlertDescription>
+            </Alert>
+          )}
         </CardContent>
-        <CardFooter className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
+        <CardFooter className="px-6 py-4 bg-secondary-200 border-t border-white/10 flex flex-col gap-4">
           <Button
             onClick={handleTrain}
-            className="w-full bg-[#FF5722] hover:bg-[#F4511E] text-white h-12 text-base font-medium"
-            disabled={isLoading}
+            className="w-full bg-primary hover:bg-secondary/90 hover:text-white text-black border-2 font-semibold h-12 text-base"
+            disabled={isLoading || !taskType}
           >
             {isLoading ? "Training..." : "Start Training"}
           </Button>
@@ -256,7 +302,7 @@ export function TrainStep() {
                 key={file.name}
                 variant="outline"
                 onClick={() => handleDownloadModel(file.name)}
-                className="w-full border-[#FF5722] text-[#FF5722] hover:bg-orange-50"
+                className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary-foreground font-medium"
                 disabled={isLoading}
               >
                 <FileDown className="mr-2 h-4 w-4" />
