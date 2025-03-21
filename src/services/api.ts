@@ -120,10 +120,41 @@ const getDownloadPreprocessedUrl = (filename: string) => {
   return `${API_BASE_URL}/download-preprocessed/${filename}`;
 };
 
+const trainModelWithPreprocessed = async (
+  preprocessedFilenames: string[],
+  targetColumn: string,
+  taskType: string,
+  modelType: string,
+  onProgress: (progress: number) => void
+) => {
+  const formData = new FormData();
+  preprocessedFilenames.forEach((filename) =>
+    formData.append("preprocessed_filenames", filename)
+  );
+  formData.append("target_column", targetColumn || "");
+  formData.append("task_type", taskType);
+  formData.append("model_type", modelType);
+
+  onProgress(30);
+  console.log("Sending train request to http://127.0.0.1:8000/train...");
+  try {
+    const response = await axios.post(`${API_BASE_URL}/train`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 60000,
+    });
+    onProgress(100);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+    return {};
+  }
+};
+
 export {
   uploadFiles,
   preprocessData,
   trainModel,
   getDownloadModelUrl,
   getDownloadPreprocessedUrl,
+  trainModelWithPreprocessed,
 };

@@ -36,6 +36,7 @@ export function PreprocessStep() {
     isLoading,
     setIsLoading,
     setProgress,
+    setPreprocessedFiles
   } = useML();
 
   useEffect(() => {
@@ -71,13 +72,21 @@ export function PreprocessStep() {
     setProgress(10);
 
     try {
-      await preprocessData(
+      const data = await preprocessData(
         files,
         missingStrategy,
         scaling,
         encoding,
-        targetColumn,
+        isTargetEncodingMethod ? targetColumn : "",
         setProgress
+      );
+      setPreprocessedFiles(
+        Object.fromEntries(
+          Object.entries(data).map(([k, v]: [string, any]) => [
+            k,
+            v.preprocessed_file,
+          ])
+        )
       );
       setActiveStep("train");
     } catch (error: any) {

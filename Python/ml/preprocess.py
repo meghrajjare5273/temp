@@ -116,7 +116,7 @@ def preprocess_data(df, missing_strategy='mean', scaling=True, encoding='onehot'
                 return df_processed[[target_column] + [col for col in df_processed.columns if col != target_column]]
             return df_processed
 
-        preprocessor = ColumnTransformer(transformers=transformers, remainder='passthrough')
+        preprocessor = ColumnTransformer(transformers=transformers, remainder='passthrough', force_int_remainder_cols=False)
         transformed_data = preprocessor.fit_transform(df_processed)
         
         # Get feature names after transformation

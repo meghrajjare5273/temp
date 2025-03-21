@@ -49,6 +49,8 @@ interface MLContextType {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   progress: number;
   setProgress: React.Dispatch<React.SetStateAction<number>>;
+  preprocessedFiles: Record<string, string>;
+  setPreprocessedFiles: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 const MLContext = createContext<MLContextType | undefined>(undefined);
@@ -81,6 +83,7 @@ export function MLProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const [preprocessedFiles, setPreprocessedFiles] = useState<Record<string, string>>({});
 
   return (
     <MLContext.Provider
@@ -119,6 +122,8 @@ export function MLProvider({ children }: { children: ReactNode }) {
         setIsLoading,
         progress,
         setProgress,
+        preprocessedFiles,
+        setPreprocessedFiles
       }}
     >
       {children}

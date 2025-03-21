@@ -20,7 +20,7 @@ import {
   Info,
   AlertTriangle,
 } from "lucide-react";
-import { trainModel, getDownloadModelUrl } from "@/services/api";
+import { getDownloadModelUrl, trainModelWithPreprocessed } from "@/services/api";
 import { getAvailableModels } from "@/utils/model-utils";
 import { motion } from "motion/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -44,6 +44,7 @@ export function TrainStep() {
     isLoading,
     setIsLoading,
     setProgress,
+    preprocessedFiles,
   } = useML();
 
   // Set default model type when task type changes
@@ -73,13 +74,15 @@ export function TrainStep() {
   ]);
 
   const handleTrain = async () => {
-    if (!files.length) return setError("Please upload files first.");
+    if (!Object.keys(preprocessedFiles).length)
+      return setError("Please preprocess data first.");
     setIsLoading(true);
     setProgress(10);
 
     try {
-      const data = await trainModel(
-        files,
+      const preprocessedFilenames = Object.values(preprocessedFiles);
+      const data = await trainModelWithPreprocessed(
+        preprocessedFilenames,
         targetColumn,
         taskType,
         modelType,

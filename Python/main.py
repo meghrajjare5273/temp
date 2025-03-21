@@ -90,31 +90,30 @@ async def preprocess_endpoint(
 
 @app.post("/train")
 async def train_model_endpoint(
-    files: list[UploadFile] = File(...),
+    preprocessed_filenames: list[str] = Form(...),
     target_column: str = Form(None),
     task_type: str = Form(...),
     model_type: str = Form(None)
 ):
     try:
         results = {}
-        os.makedirs("uploads", exist_ok=True)
-        for file in files:
-            file_location = f"uploads/{file.filename}"
-            with open(file_location, "wb") as f:
-                f.write(await file.read())
-            
-            df = pd.read_csv(file_location)
-            df_processed = preprocess_data(df)  # Default preprocessing
+        for filename in preprocessed_filenames:
+            file_location =     filename # e.g., uploads/preprocessed_data.csv
+            if not os.path.exists(file_location):
+                return JSONResponse(content={"error": f"Preprocessed file {filename} not found"}, status_code=404)
+            df_processed = pd.read_csv(file_location)
             result = train_model(df_processed, target_column, task_type, model_type)
             if "model" in result:
-                save_model(result["model"], file_path=f"uploads/trained_model_{file.filename.split('.')[0]}.pkl")
+                save_model(result["model"], file_path=f"uploads/trained_model_{filename.split('.')[0]}.pkl")
                 del result["model"]
-            results[file.filename] = result
+            results[filename] = result
         return JSONResponse(content=results)
     except Exception as e:
         print(f"Error in /train endpoint: {str(e)}")
         return JSONResponse(content={"error": f"Training failed: {str(e)}"}, status_code=500)
+    
 
+    
 @app.get("/download-model/{filename}")
 async def download_model(filename: str):
     try:
