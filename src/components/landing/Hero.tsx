@@ -20,12 +20,14 @@ export function Hero() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              BIG DATA AND
+              NoCode AI & ML
               <br />
-              DATA ANALYSIS
+              Model Builder
             </h1>
             <div className="mt-4 text-right">
-              <span className="text-sm">2023</span>
+              <span className="text-sm">
+                by <b>Neural Nexus</b>
+              </span>
             </div>
           </motion.div>
         </div>
@@ -39,7 +41,9 @@ export function Hero() {
           >
             <div>
               <p className="text-lg text-white/80">
-                We build data pipelines and accelerate business processes.
+                &quot;Upgrade your Future with the power of AI
+                <br />
+                and Machine Learning.&quot;
               </p>
             </div>
           </motion.div>
@@ -84,9 +88,7 @@ export function Hero() {
               </div>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mt-6">
-              DEVELOPMENT
               <br />
-              COMPANY
             </h2>
           </motion.div>
         </div>

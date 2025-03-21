@@ -9,8 +9,8 @@ export function CTA() {
   return (
     <section className="py-24 px-6 md:px-10 lg:px-20 bg-primary relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-white/5 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-primary/10 blur-3xl"></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -21,10 +21,10 @@ export function CTA() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-400 mb-4">
             Ready to Transform Your Data
           </h2>
-          <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-white italic mb-10">
+          <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-500 italic mb-10">
             Into Actionable Insights?
           </p>
 

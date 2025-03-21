@@ -14,7 +14,7 @@ export function Footer() {
                 <div className="w-6 h-6 bg-primary rounded-full"></div>
               </div>
               <div>
-                <div className="text-xl font-bold">QClay AI</div>
+                <div className="text-xl font-bold">NoCode AI</div>
                 <div className="text-sm text-gray-400">
                   Machine Learning
                   <br />
@@ -149,7 +149,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10">
           <div className="text-sm text-white/50 mb-4 md:mb-0">
-            © {new Date().getFullYear()} QClay AI. All rights reserved.
+            © {new Date().getFullYear()} Neural Nexus. All rights reserved.
           </div>
 
           <div className="flex gap-6">

@@ -28,7 +28,7 @@ export function Navbar() {
               <div className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center">
                 <div className="w-6 h-6 bg-primary rounded-full"></div>
               </div>
-              <span className="ml-3 text-white font-medium">QClay AI</span>
+              <span className="ml-3 text-white font-medium">NoCodeAI</span>
             </div>
           </motion.div>
         </Link>
@@ -46,9 +46,9 @@ export function Navbar() {
           ))}
           <Link
             href="/playground"
-            className="ml-4 bg-white text-secondary hover:bg-primary hover:text-white transition-colors px-6 py-2 rounded-full text-sm font-medium"
+            className="ml-4 bg-white text-secondary hover:text-white transition-colors px-6 py-2 rounded-full text-sm font-medium hover:bg-secondary/75 "
           >
-            Get Quote
+            Start Building
           </Link>
         </div>
 
@@ -86,7 +86,7 @@ export function Navbar() {
               className="bg-white text-secondary hover:bg-primary hover:text-white transition-colors px-6 py-2 rounded-full text-sm font-medium text-center mt-2"
               onClick={() => setIsOpen(false)}
             >
-              Get Quote
+              Start Bulding
             </Link>
           </div>
         </motion.div>
