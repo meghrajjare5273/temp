@@ -39,15 +39,15 @@ export function ProgressSteps() {
                 animate={{ scale: isActive ? 1.05 : 1 }}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isActive
-                    ? "bg-[#FF5722] text-white shadow-md"
-                    : "bg-gray-100 text-gray-400"
+                    ? "bg-primary text-white shadow-md"
+                    : "bg-white/10 text-white/50"
                 }`}
               >
                 {step.icon}
               </motion.div>
               <span
                 className={`text-xs mt-2 hidden sm:block font-medium ${
-                  isActive ? "text-[#FF5722]" : "text-gray-500"
+                  isActive ? "text-primary" : "text-white/50"
                 }`}
               >
                 {step.label}
@@ -56,7 +56,7 @@ export function ProgressSteps() {
           );
         })}
       </div>
-      <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: "0%" }}
           animate={{
@@ -67,7 +67,7 @@ export function ProgressSteps() {
             }%`,
           }}
           transition={{ duration: 0.5 }}
-          className="absolute h-full bg-[#FF5722]"
+          className="absolute h-full bg-primary"
         />
       </div>
     </div>

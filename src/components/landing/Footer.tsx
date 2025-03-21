@@ -1,113 +1,106 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { Linkedin, Instagram, Twitter, Github } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="py-12 px-6 md:px-10 lg:px-20 bg-black text-white">
+    <footer className="py-16 px-6 md:px-10 lg:px-20 bg-secondary text-white border-t border-white/10">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16">
           <div className="mb-8 md:mb-0">
             <div className="flex items-center gap-3">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M10 30L20 10L30 30H10Z" fill="#FF5722" />
-                <path d="M15 25L20 15L25 25H15Z" fill="#FF7043" />
-              </svg>
+              <div className="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <div className="w-6 h-6 bg-primary rounded-full"></div>
+              </div>
               <div>
-                <div className="text-xl font-bold">VisioAI</div>
+                <div className="text-xl font-bold">QClay AI</div>
                 <div className="text-sm text-gray-400">
-                  Powered by
+                  Machine Learning
                   <br />
-                  Visionary Intelligence
+                  Made Simple
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <div className="text-sm mb-4">Follow Our Social Media</div>
+            <div className="text-sm mb-4 text-white/70">Connect With Us</div>
             <div className="flex gap-3">
               <Link
                 href="#"
-                className="w-10 h-10 bg-[#FF5722] rounded flex items-center justify-center hover:bg-[#F4511E] transition-colors"
+                className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors"
               >
-                <Facebook size={20} />
+                <Linkedin size={18} className="text-white" />
               </Link>
               <Link
                 href="#"
-                className="w-10 h-10 bg-[#FF5722] rounded flex items-center justify-center hover:bg-[#F4511E] transition-colors"
+                className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors"
               >
-                <Twitter size={20} />
+                <Instagram size={18} className="text-white" />
               </Link>
               <Link
                 href="#"
-                className="w-10 h-10 bg-[#FF5722] rounded flex items-center justify-center hover:bg-[#F4511E] transition-colors"
+                className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors"
               >
-                <Instagram size={20} />
+                <Twitter size={18} className="text-white" />
               </Link>
               <Link
                 href="#"
-                className="w-10 h-10 bg-[#FF5722] rounded flex items-center justify-center hover:bg-[#F4511E] transition-colors"
+                className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors"
               >
-                <Youtube size={20} />
+                <Github size={18} className="text-white" />
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div>
-            <h3 className="text-lg font-medium mb-4">Company</h3>
+            <h3 className="text-lg font-medium mb-4 text-white">Platform</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  About Us
+                  Features
                 </Link>
               </li>
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  Career
+                  Documentation
                 </Link>
               </li>
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  Contact
+                  API Reference
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-medium mb-4">Resources</h3>
+            <h3 className="text-lg font-medium mb-4 text-white">Resources</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  Blog & Insight
+                  Blog
                 </Link>
               </li>
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
                   Case Studies
                 </Link>
@@ -115,7 +108,7 @@ export function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
                   Tutorials
                 </Link>
@@ -124,53 +117,53 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-medium mb-4">Generals</h3>
+            <h3 className="text-lg font-medium mb-4 text-white">Company</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  About us
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  Services
+                  Careers
                 </Link>
               </li>
               <li>
                 <Link
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-primary transition-colors"
                 >
-                  Tutorials
+                  Contact
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-800">
-          <div className="text-sm text-gray-400 mb-4 md:mb-0">
-            ©2025 All Rights Reserved
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10">
+          <div className="text-sm text-white/50 mb-4 md:mb-0">
+            © {new Date().getFullYear()} QClay AI. All rights reserved.
           </div>
 
           <div className="flex gap-6">
             <Link
               href="#"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-white/50 hover:text-white transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="#"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-white/50 hover:text-white transition-colors"
             >
-              Terms & Conditions
+              Terms of Service
             </Link>
           </div>
         </div>

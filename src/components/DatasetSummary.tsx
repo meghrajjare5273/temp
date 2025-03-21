@@ -37,12 +37,10 @@ export function DatasetSummary() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="mt-8 border border-orange-100 shadow-md overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
-          <CardTitle className="text-2xl text-gray-800">
-            Dataset Summary
-          </CardTitle>
-          <CardDescription className="text-gray-600">
+      <Card className="mt-8 border border-white/10 bg-secondary-50 shadow-md overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-50 border-b border-white/10">
+          <CardTitle className="text-2xl text-white">Dataset Summary</CardTitle>
+          <CardDescription className="text-white/70">
             Overview of your uploaded datasets
           </CardDescription>
         </CardHeader>
@@ -55,17 +53,17 @@ export function DatasetSummary() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * fileIndex }}
-                  className="pb-6 border-b border-gray-100 last:border-0 last:pb-0"
+                  className="pb-6 border-b border-white/10 last:border-0 last:pb-0"
                 >
                   <div className="flex items-start gap-3 mb-4">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mt-1">
-                      <Database className="h-5 w-5 text-[#FF5722]" />
+                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mt-1">
+                      <Database className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h4 className="text-lg font-medium text-gray-800">
+                      <h4 className="text-lg font-medium text-white">
                         {filename}
                       </h4>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/50">
                         {summary.summary.rows} rows,{" "}
                         {summary.summary.columns.length} columns
                       </p>
@@ -73,31 +71,31 @@ export function DatasetSummary() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pl-12">
-                    <div className="bg-white p-4 rounded-lg border border-orange-100 shadow-sm">
+                    <div className="bg-secondary-100 p-4 rounded-lg border border-white/10 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <LineChart className="h-4 w-4 text-[#FF5722]" />
-                        <h5 className="text-sm font-medium text-gray-700">
+                        <LineChart className="h-4 w-4 text-primary" />
+                        <h5 className="text-sm font-medium text-white">
                           Suggested Analysis
                         </h5>
                       </div>
                       <ul className="text-sm space-y-2">
                         <li className="flex justify-between">
-                          <span className="text-gray-600">Task Type:</span>
-                          <span className="font-medium">
+                          <span className="text-white/70">Task Type:</span>
+                          <span className="font-medium text-white">
                             {summary.suggested_task_type}
                           </span>
                         </li>
                         <li className="flex justify-between">
-                          <span className="text-gray-600">Target Column:</span>
-                          <span className="font-medium">
+                          <span className="text-white/70">Target Column:</span>
+                          <span className="font-medium text-white">
                             {summary.suggested_target_column || "None"}
                           </span>
                         </li>
                         <li className="flex justify-between">
-                          <span className="text-gray-600">
+                          <span className="text-white/70">
                             Missing Strategy:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-medium text-white">
                             {summary.suggested_missing_strategy}
                           </span>
                         </li>
@@ -105,14 +103,14 @@ export function DatasetSummary() {
                     </div>
 
                     {insights[filename] && (
-                      <div className="bg-white p-4 rounded-lg border border-orange-100 shadow-sm">
+                      <div className="bg-secondary-100 p-4 rounded-lg border border-white/10 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
-                          <Lightbulb className="h-4 w-4 text-[#FF5722]" />
-                          <h5 className="text-sm font-medium text-gray-700">
+                          <Lightbulb className="h-4 w-4 text-primary" />
+                          <h5 className="text-sm font-medium text-white">
                             AI Insights
                           </h5>
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-white/70">
                           {Array.isArray(insights[filename]) ? (
                             <ul className="space-y-1 list-disc pl-4">
                               {insights[filename].map((insight, i) => (
@@ -131,7 +129,7 @@ export function DatasetSummary() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="mb-4 border-[#FF5722] text-[#FF5722] hover:bg-orange-50 flex items-center gap-2"
+                      className="mb-4 border-primary text-primary hover:bg-primary/10 flex items-center gap-2"
                       onClick={() => toggleColumnInfo(filename)}
                     >
                       <Table className="h-4 w-4" />
@@ -145,22 +143,22 @@ export function DatasetSummary() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         transition={{ duration: 0.3 }}
-                        className="mb-4 bg-white p-4 rounded-lg border border-orange-100 shadow-sm overflow-hidden"
+                        className="mb-4 bg-secondary-100 p-4 rounded-lg border border-white/10 shadow-sm overflow-hidden"
                       >
-                        <h5 className="text-sm font-medium text-gray-700 mb-3">
+                        <h5 className="text-sm font-medium text-white mb-3">
                           Column Information
                         </h5>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm">
                             <thead>
-                              <tr className="bg-gray-50 border-b border-gray-200">
-                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                              <tr className="bg-secondary-200 border-b border-white/10">
+                                <th className="text-left py-2 px-3 font-medium text-white">
                                   Column Name
                                 </th>
-                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                                <th className="text-left py-2 px-3 font-medium text-white">
                                   Data Type
                                 </th>
-                                <th className="text-left py-2 px-3 font-medium text-gray-700">
+                                <th className="text-left py-2 px-3 font-medium text-white">
                                   Missing Values
                                 </th>
                               </tr>
@@ -172,21 +170,21 @@ export function DatasetSummary() {
                                     key={column}
                                     className={`border-b last:border-0 ${
                                       colIndex % 2 === 0
-                                        ? "bg-white"
-                                        : "bg-gray-50"
+                                        ? "bg-secondary-100"
+                                        : "bg-secondary-200"
                                     }`}
                                   >
-                                    <td className="py-2 px-3 text-gray-800">
+                                    <td className="py-2 px-3 text-white">
                                       {column}
                                     </td>
-                                    <td className="py-2 px-3 text-gray-600 font-mono text-xs">
+                                    <td className="py-2 px-3 text-white/70 font-mono text-xs">
                                       {summary.summary.data_types[column]}
                                     </td>
                                     <td className="py-2 px-3">
                                       {summary.summary.missing_values[
                                         column
                                       ] ? (
-                                        <span className="px-2 py-1 bg-red-50 text-red-500 rounded-full text-xs">
+                                        <span className="px-2 py-1 bg-red-900/30 text-red-300 rounded-full text-xs">
                                           {
                                             summary.summary.missing_values[
                                               column
@@ -194,7 +192,7 @@ export function DatasetSummary() {
                                           }
                                         </span>
                                       ) : (
-                                        <span className="px-2 py-1 bg-green-50 text-green-500 rounded-full text-xs">
+                                        <span className="px-2 py-1 bg-green-900/30 text-green-300 rounded-full text-xs">
                                           0
                                         </span>
                                       )}

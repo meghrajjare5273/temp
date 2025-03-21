@@ -21,13 +21,13 @@ export function LoadingAndError() {
           className="mb-6"
         >
           <div className="flex justify-between items-center mb-2">
-            <p className="text-sm text-gray-600">Processing...</p>
-            <span className="text-sm font-medium text-[#FF5722]">
+            <p className="text-sm text-white/70">Processing...</p>
+            <span className="text-sm font-medium text-primary">
               {progress}%
             </span>
           </div>
-          <Progress value={progress} className="h-2 bg-gray-100">
-            <div className="h-full bg-[#FF5722] transition-all" />
+          <Progress value={progress} className="h-2 bg-white/10">
+            <div className="h-full bg-primary transition-all" />
           </Progress>
         </motion.div>
       )}
@@ -40,16 +40,19 @@ export function LoadingAndError() {
           exit={{ opacity: 0, y: -10 }}
           className="mb-6"
         >
-          <Alert variant="destructive" className="border-red-200 bg-red-50">
-            <AlertCircle className="h-4 w-4 text-red-500" />
-            <AlertTitle className="text-red-600">Error</AlertTitle>
-            <AlertDescription className="text-red-600">
+          <Alert
+            variant="destructive"
+            className="border-red-800 bg-red-900/50 text-white"
+          >
+            <AlertCircle className="h-4 w-4 text-red-400" />
+            <AlertTitle className="text-red-200">Error</AlertTitle>
+            <AlertDescription className="text-red-200">
               {error}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setError(null)}
-                className="ml-2 mt-2 border-red-200 hover:bg-red-100 text-red-600"
+                className="ml-2 mt-2 border-red-700 hover:bg-red-800 text-red-200"
               >
                 Dismiss
                 <X className="ml-1 h-3 w-3" />

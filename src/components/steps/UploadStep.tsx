@@ -117,12 +117,12 @@ export function UploadStep() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="border border-orange-100 shadow-md overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-white">
-            <CardTitle className="text-2xl text-gray-800">
+        <Card className="border border-white/10 bg-secondary-50 shadow-md overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-50 border-b border-white/10">
+            <CardTitle className="text-2xl text-white">
               Upload Datasets
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-white/70">
               Upload your CSV files to begin the ML training process
             </CardDescription>
           </CardHeader>
@@ -133,20 +133,20 @@ export function UploadStep() {
               onDragLeave={handleDragLeave}
               className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
                 isDragging
-                  ? "border-[#FF5722] bg-orange-50"
+                  ? "border-primary bg-primary/10"
                   : isLoading
                   ? "opacity-50 pointer-events-none"
-                  : "border-gray-200 hover:border-[#FF5722]/50 hover:bg-orange-50/30"
+                  : "border-white/20 hover:border-primary/50 hover:bg-primary/5"
               }`}
             >
               <div className="flex flex-col items-center justify-center gap-4">
-                <div className="w-16 h-16 bg-[#FF5722]/10 rounded-full flex items-center justify-center">
-                  <UploadIcon className="h-8 w-8 text-[#FF5722]" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <UploadIcon className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-800">
+                <h3 className="text-lg font-medium text-white">
                   Drag & Drop Files
                 </h3>
-                <p className="text-sm text-gray-600 max-w-xs">
+                <p className="text-sm text-white/70 max-w-xs">
                   Drag and drop your CSV files here, or click to browse your
                   files
                 </p>
@@ -161,7 +161,7 @@ export function UploadStep() {
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading}
-                  className="bg-[#FF5722] hover:bg-[#F4511E] text-white"
+                  className="bg-primary hover:bg-primary-600 text-white"
                 >
                   Select Files
                 </Button>
@@ -175,9 +175,7 @@ export function UploadStep() {
                 transition={{ duration: 0.3 }}
                 className="mt-8"
               >
-                <h4 className="font-medium mb-3 text-gray-800">
-                  Selected Files:
-                </h4>
+                <h4 className="font-medium mb-3 text-white">Selected Files:</h4>
                 <div className="space-y-3">
                   {files.map((file, index) => (
                     <motion.div
@@ -185,14 +183,16 @@ export function UploadStep() {
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center gap-3 p-3 bg-white rounded-md border border-orange-100 shadow-sm"
+                      className="flex items-center gap-3 p-3 bg-secondary-100 rounded-md border border-white/10 shadow-sm"
                     >
-                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                        <File className="h-5 w-5 text-[#FF5722]" />
+                      <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                        <File className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{file.name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-medium text-sm text-white">
+                          {file.name}
+                        </div>
+                        <div className="text-xs text-white/50">
                           {(file.size / 1024).toFixed(1)} KB
                         </div>
                       </div>

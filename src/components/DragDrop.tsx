@@ -32,7 +32,7 @@ function ActiveStep() {
 // Main content component
 function MainContent() {
   return (
-    <div className="flex-1 p-6">
+    <div className="flex-1 p-6 bg-secondary">
       <div className="max-w-4xl mx-auto">
         <ProgressSteps />
         <LoadingAndError />
@@ -46,7 +46,7 @@ function MainContent() {
 // Mobile header component
 function MobileHeader() {
   return (
-    <div className="lg:hidden bg-primary text-primary-foreground p-4">
+    <div className="lg:hidden bg-secondary text-white p-4 border-b border-white/10">
       <h1 className="text-xl font-bold">ML Platform</h1>
     </div>
   );

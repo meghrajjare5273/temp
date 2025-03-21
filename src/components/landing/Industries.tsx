@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
- 
 "use client";
 
 import { motion } from "motion/react";
@@ -8,28 +7,28 @@ import { useState } from "react";
 
 const industries = [
   {
-    title: "Real State & Prop Tech",
+    title: "Finance & Banking",
     image: "/placeholder.svg?height=300&width=400",
     description:
-      "AI solutions for property management, valuation, and customer experience.",
-  },
-  {
-    title: "Gaming & Entertainment",
-    image: "/placeholder.svg?height=300&width=400",
-    description:
-      "Enhance player experiences and optimize game development with AI.",
+      "Leverage ML for risk assessment, fraud detection, and personalized financial recommendations.",
   },
   {
     title: "Healthcare & Biotech",
     image: "/placeholder.svg?height=300&width=400",
     description:
-      "Revolutionize patient care and accelerate medical research with AI.",
+      "Accelerate medical research, improve diagnostics, and optimize patient care with AI.",
   },
   {
-    title: "Finance & Banking",
+    title: "Retail & E-commerce",
     image: "/placeholder.svg?height=300&width=400",
     description:
-      "Streamline operations and enhance security with intelligent solutions.",
+      "Enhance customer experiences with personalized recommendations and demand forecasting.",
+  },
+  {
+    title: "Manufacturing & Logistics",
+    image: "/placeholder.svg?height=300&width=400",
+    description:
+      "Optimize supply chains, predict maintenance needs, and improve quality control.",
   },
 ];
 
@@ -47,7 +46,7 @@ export function Industries() {
   return (
     <section
       id="industries"
-      className="py-20 px-6 md:px-10 lg:px-20 bg-[#FF5722]"
+      className="py-24 px-6 md:px-10 lg:px-20 bg-gradient-to-b from-secondary to-black"
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -62,16 +61,16 @@ export function Industries() {
               <br />
               We Serve
             </h2>
-            <p className="mt-6 text-lg text-white/90 max-w-lg">
-              AI is reshaping industries worldwide, enabling businesses to
-              optimize operations, enhance decision-making, and unlock new
-              revenue streams.
+            <p className="mt-6 text-lg text-white/70 max-w-lg">
+              Our ML platform is designed to meet the unique needs of various
+              industries, helping businesses across sectors harness the power of
+              machine learning.
             </p>
 
             <div className="mt-8 flex items-center gap-4">
               <button
                 onClick={prevSlide}
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -81,7 +80,7 @@ export function Industries() {
                   <div
                     key={index}
                     className={`w-2 h-2 rounded-full ${
-                      index === currentSlide ? "bg-white" : "bg-white/30"
+                      index === currentSlide ? "bg-primary" : "bg-white/30"
                     }`}
                   />
                 ))}
@@ -89,7 +88,7 @@ export function Industries() {
 
               <button
                 onClick={nextSlide}
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
               >
                 <ChevronRight size={20} />
               </button>
@@ -101,15 +100,18 @@ export function Industries() {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                whileInView={{
+                  opacity: index === currentSlide ? 1 : 0,
+                  y: index === currentSlide ? 0 : 20,
+                }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`bg-white rounded-lg overflow-hidden shadow-lg ${
+                transition={{ duration: 0.5 }}
+                className={`bg-white/5 rounded-lg overflow-hidden border border-white/10 shadow-lg ${
                   index === currentSlide ? "block" : "hidden"
                 }`}
               >
                 <div className="relative h-48 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-gray-900/20 to-gray-900/0"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                   <img
                     src={industry.image || "/placeholder.svg"}
                     alt={industry.title}
@@ -117,10 +119,10 @@ export function Industries() {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2">
                     {industry.title}
                   </h3>
-                  <p className="text-gray-600">{industry.description}</p>
+                  <p className="text-white/70">{industry.description}</p>
                 </div>
               </motion.div>
             ))}
