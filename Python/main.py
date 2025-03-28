@@ -104,7 +104,11 @@ async def train_model_endpoint(
             df_processed = pd.read_csv(file_location)
             result = train_model(df_processed, target_column, task_type, model_type)
             if "model" in result:
-                save_model(result["model"], file_path=f"uploads/trained_model_{filename.split('.')[0]}.pkl")
+                # Extract the original filename by removing 'preprocessed_' prefix from basename
+                basename = os.path.basename(filename)  # e.g., preprocessed_data.csv
+                original_filename = basename.replace("preprocessed_", "", 1)  # e.g., data.csv
+                model_filename = f"trained_model_{original_filename.split('.')[0]}.pkl"  # e.g., trained_model_data.pkl
+                save_model(result["model"], file_path=f"uploads/{model_filename}")
                 del result["model"]
             results[filename] = result
         return JSONResponse(content=results)
