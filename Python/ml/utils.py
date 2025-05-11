@@ -33,7 +33,7 @@ class DatasetAnalyzer:
     def __init__(self):
         """Initialize the DatasetAnalyzer with Gemini API if available."""
         load_dotenv()
-        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.api_key = ""
         self.model = None
         
         if self.api_key:
