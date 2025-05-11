@@ -1,7 +1,7 @@
 "use client";
 
 import { useML } from "@/context/MLContext";
-import { Upload, Cog, Brain, BarChart3 } from "lucide-react";
+import { Upload, Cog, Brain, BarChart3, Wrench } from "lucide-react";
 import type { Step } from "@/types";
 import { motion } from "motion/react";
 
@@ -16,6 +16,16 @@ export function ProgressSteps() {
         <Upload
           className="h-5 w-5"
           color={activeStep === "upload" ? "black" : "grey"}
+        />
+      ),
+    },
+    {
+      id: "conifgure",
+      label: "Configure Data",
+      icon: (
+        <Wrench
+          className="h-5 w-5"
+          color={activeStep == "configure" ? "black" : "grey"}
         />
       ),
     },

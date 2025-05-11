@@ -10,6 +10,7 @@ import { PreprocessStep } from "@/components/steps/PreProcessStep";
 import { TrainStep } from "@/components/steps/TrainStep";
 import { VisualizeStep } from "@/components/steps/VisualizeStep";
 import { DatasetSummary } from "@/components/DatasetSummary";
+import { ConfigureStep } from "./steps/ConfigureStep";
 
 // This component renders the active step based on the current state
 function ActiveStep() {
@@ -18,6 +19,8 @@ function ActiveStep() {
   switch (activeStep) {
     case "upload":
       return <UploadStep />;
+    case "configure":
+      return <ConfigureStep />;
     case "preprocess":
       return <PreprocessStep />;
     case "train":

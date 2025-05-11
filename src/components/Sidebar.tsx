@@ -2,7 +2,14 @@
 "use client";
 
 import { useML } from "@/context/MLContext";
-import { Upload, Cog, Brain, BarChart3, CheckCircle2 } from "lucide-react";
+import {
+  Upload,
+  Cog,
+  Brain,
+  BarChart3,
+  CheckCircle2,
+  Wrench,
+} from "lucide-react";
 import type { Step } from "@/types";
 
 export function Sidebar() {
@@ -16,6 +23,16 @@ export function Sidebar() {
         <Upload
           className="h-5 w-5"
           color={activeStep === "upload" ? "black" : "white"}
+        />
+      ),
+    },
+    {
+      id: "configure",
+      label: "Configure Data",
+      icon: (
+        <Wrench
+          className="h-5 w-5"
+          color={activeStep == "configure" ? "black" : "grey"}
         />
       ),
     },

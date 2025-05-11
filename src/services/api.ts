@@ -23,6 +23,24 @@ const handleError = (error: any) => {
   }
 };
 
+const predict = async (
+  filename: string,
+  testFile: File | null,
+  singlePoint: string | null
+) => {
+  const formData = new FormData();
+  if (testFile) formData.append("test_file", testFile);
+  if (singlePoint) formData.append("single_point", singlePoint);
+  const response = await axios.post(
+    `${API_BASE_URL}/predict/${filename}`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+  return response.data;
+};
+
 // Optimized upload files function
 const uploadFiles = async (
   files: File[],
@@ -52,13 +70,18 @@ const preprocessData = async (
   scaling: boolean,
   encoding: string,
   targetColumn = "",
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
+  selectedFeatures: Record<string, string[]> = {}
 ) => {
   const formData = new FormData();
-  files.forEach((file) => formData.append("files", file));
-  formData.append("missing_strategy", missingStrategy);
-  formData.append("scaling", scaling.toString());
-  formData.append("encoding", encoding);
+    files.forEach((file) => formData.append("files", file));
+    formData.append("missing_strategy", missingStrategy);
+    formData.append("scaling", scaling.toString());
+    formData.append("encoding", encoding);
+    if (targetColumn) formData.append("target_column", targetColumn);
+    Object.entries(selectedFeatures).forEach(([filename, features]) => {
+        formData.append(`selected_features[${filename}]`, features.join(","));
+    });
 
   // Add target column if provided (needed for target encoding)
   if (targetColumn) {
@@ -157,4 +180,5 @@ export {
   getDownloadModelUrl,
   getDownloadPreprocessedUrl,
   trainModelWithPreprocessed,
+  predict,
 };

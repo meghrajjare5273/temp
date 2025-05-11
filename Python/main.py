@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import os
+from sklearn.model_selection import train_test_split
+import joblib
 from ml.preprocess import preprocess_data, save_preprocessed_data, suggest_missing_strategy
 from ml.models import train_model, save_model
 from ml.utils import get_dataset_insights
@@ -19,6 +21,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
+
 
 @app.post("/upload")
 async def upload_file(files: list[UploadFile] = File(...)):
@@ -58,6 +64,70 @@ async def upload_file(files: list[UploadFile] = File(...)):
     except Exception as e:
         print(f"Error in /upload endpoint: {str(e)}")
         return JSONResponse(content={"error": f"Upload failed: {str(e)}"}, status_code=500)
+    
+
+
+
+
+
+    
+@app.post("/configure")
+async def configure_data(
+    files: list[UploadFile] = File(...),
+    task_type: str = Form(...),
+    target_column: str = Form(None),
+    selected_features: list[str] = Form(None),  # Will be used in Feature 2
+    missing_strategy: str = Form(...),
+    scaling: bool = Form(...),
+    encoding: str = Form(...)
+):
+    try:
+        results = {}
+        os.makedirs("uploads", exist_ok=True)
+        for file in files:
+            file_location = f"uploads/{file.filename}"
+            with open(file_location, "wb") as f:
+                f.write(await file.read())
+            
+            df = pd.read_csv(file_location)
+            if selected_features:
+                feature_cols = [col for col in selected_features if col in df.columns]
+                if task_type in ["classification", "regression"] and target_column:
+                    df = df[feature_cols + [target_column]]
+                else:
+                    df = df[feature_cols]
+            
+            # Split data first to prevent leakage
+            train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+            
+            # Preprocess training data
+            df_processed = preprocess_data(
+                train_df,
+                missing_strategy=missing_strategy,
+                scaling=scaling,
+                encoding=encoding,
+                target_column=target_column
+            )
+            
+            # Save preprocessor and preprocessed data
+            preprocessor = df_processed.attrs.get('preprocessor')  # We'll modify preprocess_data to return this
+            preprocessor_file = f"uploads/preprocessor_{file.filename.split('.')[0]}.pkl"
+            joblib.dump(preprocessor, preprocessor_file)
+            preprocessed_file = save_preprocessed_data(df_processed, filename=f"preprocessed_{file.filename}")
+            
+            results[file.filename] = {
+                "preprocessed_file": preprocessed_file,
+                "preprocessor_file": preprocessor_file
+            }
+        return JSONResponse(content=results)
+    except Exception as e:
+        return JSONResponse(content={"error": f"Configuration failed: {str(e)}"}, status_code=500)
+    
+
+
+
+
+
 
 @app.post("/preprocess")
 async def preprocess_endpoint(
@@ -87,6 +157,11 @@ async def preprocess_endpoint(
     except Exception as e:
         print(f"Error in /preprocess endpoint: {str(e)}")
         return JSONResponse(content={"error": f"Preprocessing failed: {str(e)}"}, status_code=500)
+    
+
+
+
+
 
 @app.post("/train")
 async def train_model_endpoint(
@@ -117,6 +192,10 @@ async def train_model_endpoint(
         return JSONResponse(content={"error": f"Training failed: {str(e)}"}, status_code=500)
     
 
+
+
+    
+
     
 @app.get("/download-model/{filename}")
 async def download_model(filename: str):
@@ -139,6 +218,52 @@ async def download_preprocessed(filename: str):
     except Exception as e:
         print(f"Error in /download-preprocessed endpoint: {str(e)}")
         return JSONResponse(content={"error": f"Download failed: {str(e)}"}, status_code=500)
+    
+
+
+
+
+
+@app.post("/predict/{filename}")
+async def predict(
+    filename: str,
+    test_file: UploadFile = File(None),
+    single_point: str = Form(None)  # JSON string for single data point
+):
+    try:
+        model_file = f"uploads/trained_model_{filename.split('.')[0]}.pkl"
+        preprocessor_file = f"uploads/preprocessor_{filename.split('.')[0]}.pkl"
+        if not os.path.exists(model_file) or not os.path.exists(preprocessor_file):
+            return JSONResponse(content={"error": "Model or preprocessor not found"}, status_code=404)
+        
+        model = joblib.load(model_file)
+        preprocessor = joblib.load(preprocessor_file)
+        
+        if test_file:
+            test_df = pd.read_csv(test_file.file)
+        elif single_point:
+            import json
+            data = json.loads(single_point)
+            test_df = pd.DataFrame([data])
+        else:
+            return JSONResponse(content={"error": "No test data provided"}, status_code=400)
+        
+        # Ensure test data has the same features
+        expected_features = preprocessor.feature_names_in_
+        missing_cols = set(expected_features) - set(test_df.columns)
+        if missing_cols:
+            return JSONResponse(content={"error": f"Missing features: {missing_cols}"}, status_code=400)
+        test_df = test_df[expected_features]
+        
+        # Transform test data
+        X_test = preprocessor.transform(test_df)
+        predictions = model.predict(X_test)
+        
+        return JSONResponse(content={"predictions": predictions.tolist()})
+    except Exception as e:
+        return JSONResponse(content={"error": f"Prediction failed: {str(e)}"}, status_code=500)
+    
+    
     
 
 if __name__ == "__main__":

@@ -36,7 +36,8 @@ export function PreprocessStep() {
     isLoading,
     setIsLoading,
     setProgress,
-    setPreprocessedFiles
+    setPreprocessedFiles,
+    selectedFeatures
   } = useML();
 
   useEffect(() => {
@@ -78,7 +79,8 @@ export function PreprocessStep() {
         scaling,
         encoding,
         isTargetEncodingMethod ? targetColumn : "",
-        setProgress
+        setProgress,
+        selectedFeatures
       );
       setPreprocessedFiles(
         Object.fromEntries(

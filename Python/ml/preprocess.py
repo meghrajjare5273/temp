@@ -136,6 +136,7 @@ def preprocess_data(df, missing_strategy='mean', scaling=True, encoding='onehot'
             feature_names.append(target_column)
 
         df_processed = pd.DataFrame(transformed_data, columns=feature_names)
+        df_processed.attrs['preprocessor'] = preprocessor
         return df_processed
     except Exception as e:
         print(f"Error in preprocess_data: {str(e)}")
