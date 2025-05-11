@@ -74,18 +74,13 @@ const preprocessData = async (
   selectedFeatures: Record<string, string[]> = {}
 ) => {
   const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
-    formData.append("missing_strategy", missingStrategy);
-    formData.append("scaling", scaling.toString());
-    formData.append("encoding", encoding);
-    if (targetColumn) formData.append("target_column", targetColumn);
-    Object.entries(selectedFeatures).forEach(([filename, features]) => {
-        formData.append(`selected_features[${filename}]`, features.join(","));
-    });
-
-  // Add target column if provided (needed for target encoding)
-  if (targetColumn) {
-    formData.append("target_column", targetColumn);
+  files.forEach((file) => formData.append("files", file));
+  formData.append("missing_strategy", missingStrategy);
+  formData.append("scaling", scaling.toString());
+  formData.append("encoding", encoding);
+  if (targetColumn) formData.append("target_column", targetColumn);
+  if (Object.keys(selectedFeatures).length) {
+    formData.append("selected_features_json", JSON.stringify(selectedFeatures));
   }
 
   onProgress(40);
@@ -101,7 +96,7 @@ const preprocessData = async (
     return response.data;
   } catch (error) {
     handleError(error);
-    return {}; // Add this to prevent TypeScript error
+    return {};
   }
 };
 

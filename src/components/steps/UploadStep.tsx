@@ -88,7 +88,7 @@ export function UploadStep() {
           ])
         )
       );
-      setActiveStep("preprocess");
+      setActiveStep("configure");
     } catch (error: any) {
       console.error("Error uploading files:", error.message);
       setError(

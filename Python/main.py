@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -135,17 +136,37 @@ async def preprocess_endpoint(
     missing_strategy: str = Form(...),
     scaling: bool = Form(...),
     encoding: str = Form(...),
-    target_column: str = Form(None)  # Optional target column
+    target_column: str = Form(None),
+    selected_features_json: str = Form(None)  # New parameter for JSON string
 ):
     try:
         results = {}
         os.makedirs("uploads", exist_ok=True)
+        
+        # Parse selected_features_json if provided
+        selected_features_dict = {}
+        if selected_features_json:
+            selected_features_dict = json.loads(selected_features_json)
+        
         for file in files:
             file_location = f"uploads/{file.filename}"
             with open(file_location, "wb") as f:
                 f.write(await file.read())
             
             df = pd.read_csv(file_location)
+            
+            # Apply feature selection for this file
+            selected_features = selected_features_dict.get(file.filename, df.columns.tolist())
+            if selected_features:
+                feature_cols = [col for col in selected_features if col in df.columns]
+                if target_column and target_column in df.columns:
+                    # Ensure target_column is included if specified
+                    if target_column not in feature_cols:
+                        feature_cols.append(target_column)
+                    df = df[feature_cols]
+                else:
+                    df = df[feature_cols]
+            
             # Validate encoding and target_column compatibility
             if encoding in ["target", "kfold"] and (not target_column or target_column not in df.columns):
                 raise ValueError(f"Target column '{target_column}' is required and must exist in the dataset for {encoding} encoding")
@@ -263,7 +284,7 @@ async def predict(
     except Exception as e:
         return JSONResponse(content={"error": f"Prediction failed: {str(e)}"}, status_code=500)
     
-    
+
     
 
 if __name__ == "__main__":
