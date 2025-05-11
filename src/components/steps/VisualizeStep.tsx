@@ -31,7 +31,7 @@ import {
 import { getChartData } from "@/utils/model-utils";
 import { motion } from "motion/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { predict } from "@/services/api";
 
 // Register Chart.js components
@@ -45,11 +45,27 @@ ChartJS.register(
 );
 
 export function VisualizeStep() {
-  const { modelResults, setActiveStep } = useML();
+  const {
+    modelResults,
+    setActiveStep,
+    preprocessedFiles,
+    summaries,
+    taskType,
+    targetColumn,
+  } = useML();
   const [testFiles, setTestFiles] = useState<File[]>([]);
   const [singlePoint, setSinglePoint] = useState<Record<string, string>>({});
   const [predictions, setPredictions] = useState<Record<string, any>>({});
   const [testError, setTestError] = useState<string | null>(null);
+
+  const preprocessedToOriginal = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(preprocessedFiles).map(([original, preprocessed]) => [
+        preprocessed,
+        original,
+      ])
+    );
+  }, [preprocessedFiles]);
 
   const handleTestFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setTestFiles(Array.from(e.target.files));
@@ -288,54 +304,60 @@ export function VisualizeStep() {
         <CardContent>
           {Object.entries(modelResults).map(
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            ([filename, result]: [string, any], index) => (
-              <motion.div key={filename}>
-                {/* Existing visualization code */}
-                <div className="mt-6">
-                  <h4 className="text-sm font-medium text-white mb-3">
-                    Test Model
-                  </h4>
-                  <input
-                    type="file"
-                    accept=".csv"
-                    onChange={handleTestFileChange}
-                    className="mb-2"
-                  />
-                  {/* Single data point input */}
-                  {result.feature_importance && (
+            ([filename, result]: [string, any], index) => {
+              const originalFilename =
+                preprocessedToOriginal[filename] || filename;
+              const originalColumns =
+                summaries[originalFilename]?.summary.columns || [];
+              const features =
+                taskType === "clustering"
+                  ? originalColumns
+                  : originalColumns.filter((col) => col !== targetColumn);
+
+              return (
+                <motion.div key={filename}>
+                  {/* Existing visualization code */}
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium text-white mb-3">
+                      Test Model
+                    </h4>
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={handleTestFileChange}
+                      className="mb-2"
+                    />
                     <div className="grid grid-cols-2 gap-2 mb-4">
-                      {result.feature_importance.map(
-                        ([feature]: [string, number]) => (
-                          <input
-                            key={feature}
-                            type="text"
-                            placeholder={feature}
-                            onChange={(e) =>
-                              handleSinglePointChange(feature, e.target.value)
-                            }
-                            className="p-2 rounded-md border border-white/10 bg-secondary-200 text-white"
-                          />
-                        )
-                      )}
+                      {features.map((feature: any) => (
+                        <input
+                          key={feature}
+                          type="text"
+                          placeholder={feature}
+                          onChange={(e) =>
+                            handleSinglePointChange(feature, e.target.value)
+                          }
+                          className="p-2 rounded-md border border-white/10 bg-secondary-200 text-white"
+                        />
+                      ))}
                     </div>
-                  )}
-                  <Button onClick={() => handlePredict(filename.split(".")[0])}>
-                    Run Predictions
-                  </Button>
-                  {predictions[filename] && (
-                    <div className="mt-4">
-                      <h5 className="text-sm text-white">Predictions:</h5>
-                      <pre className="bg-secondary-200 p-2 rounded">
-                        {JSON.stringify(predictions[filename], null, 2)}
-                      </pre>
-                    </div>
-                  )}
-                  {testError && (
-                    <p className="text-red-500 mt-2">{testError}</p>
-                  )}
-                </div>
-              </motion.div>
-            )
+                    <Button onClick={() => handlePredict(originalFilename)}>
+                      Run Predictions
+                    </Button>
+                    {predictions[filename] && (
+                      <div className="mt-4">
+                        <h5 className="text-sm text-white">Predictions:</h5>
+                        <pre className="bg-secondary-200 p-2 rounded">
+                          {JSON.stringify(predictions[filename], null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                    {testError && (
+                      <p className="text-red-500 mt-2">{testError}</p>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            }
           )}
         </CardContent>
         {/* Existing footer */}

@@ -37,7 +37,7 @@ export function PreprocessStep() {
     setIsLoading,
     setProgress,
     setPreprocessedFiles,
-    selectedFeatures
+    selectedFeatures,
   } = useML();
 
   useEffect(() => {
@@ -60,6 +60,17 @@ export function PreprocessStep() {
     setMissingStrategy,
     setTargetColumn,
   ]);
+
+  // const handleFeatureToggle = (filename: string, column: string) => {
+  //   setSelectedFeatures((prev) => {
+  //     const current = prev[filename] || [];
+  //     if (current.includes(column)) {
+  //       return { ...prev, [filename]: current.filter((col) => col !== column) };
+  //     } else {
+  //       return { ...prev, [filename]: [...current, column] };
+  //     }
+  //   });
+  // };
 
   const handlePreprocess = async () => {
     if (!files.length) return setError("Please upload files first.");

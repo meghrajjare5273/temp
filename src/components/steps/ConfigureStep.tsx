@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useML } from "@/context/MLContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,10 +24,9 @@ export function ConfigureStep() {
     suggestedTargetColumns,
     setActiveStep,
     setError,
+    selectedFeatures,
+    setSelectedFeatures,
   } = useML();
-  const [selectedFeatures, setSelectedFeatures] = useState<
-    Record<string, string[]>
-  >({});
 
   useEffect(() => {
     if (Object.keys(suggestedTaskTypes).length)
@@ -41,15 +40,14 @@ export function ConfigureStep() {
     setTargetColumn,
   ]);
 
-  const handleFeatureToggle = (filename: string, feature: string) => {
+  const handleFeatureToggle = (filename: string, column: string) => {
     setSelectedFeatures((prev) => {
-      const features = prev[filename] || summaries[filename].summary.columns;
-      return {
-        ...prev,
-        [filename]: features.includes(feature)
-          ? features.filter((f) => f !== feature)
-          : [...features, feature],
-      };
+      const current = prev[filename] || [];
+      if (current.includes(column)) {
+        return { ...prev, [filename]: current.filter((col) => col !== column) };
+      } else {
+        return { ...prev, [filename]: [...current, column] };
+      }
     });
   };
 
