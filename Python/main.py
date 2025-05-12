@@ -187,31 +187,32 @@ async def preprocess_endpoint(
 @app.post("/train")
 async def train_model_endpoint(
     preprocessed_filenames: list[str] = Form(...),
-    target_column: str = Form(None),
+    target_column: str = Form(None),  # Change to str for JSON parsing
     task_type: str = Form(...),
     model_type: str = Form(None)
 ):
     try:
         results = {}
+        target_columns = json.loads(target_column) if target_column else {}
         for filename in preprocessed_filenames:
-            file_location =     filename # e.g., uploads/preprocessed_data.csv
+            file_location = filename
             if not os.path.exists(file_location):
                 return JSONResponse(content={"error": f"Preprocessed file {filename} not found"}, status_code=404)
             df_processed = pd.read_csv(file_location)
-            result = train_model(df_processed, target_column, task_type, model_type)
+            # Use per-file target column or fallback to None
+            file_target = target_columns.get(filename, None)
+            result = train_model(df_processed, file_target, task_type, model_type)
             if "model" in result:
-                # Extract the original filename by removing 'preprocessed_' prefix from basename
-                basename = os.path.basename(filename)  # e.g., preprocessed_data.csv
-                original_filename = basename.replace("preprocessed_", "", 1)  # e.g., data.csv
-                model_filename = f"trained_model_{original_filename.split('.')[0]}.pkl"  # e.g., trained_model_data.pkl
+                basename = os.path.basename(filename)
+                original_filename = basename.replace("preprocessed_", "", 1)
+                model_filename = f"trained_model_{original_filename.split('.')[0]}.pkl"
                 save_model(result["model"], file_path=f"uploads/{model_filename}")
                 del result["model"]
             results[filename] = result
         return JSONResponse(content=results)
     except Exception as e:
         print(f"Error in /train endpoint: {str(e)}")
-        return JSONResponse(content={"error": f"Training failed: {str(e)}"}, status_code=500)
-    
+        return JSONResponse(content={"error": f"Training failed: {str(e)}"}, status_code=500)    
 
 
 

@@ -13,8 +13,8 @@ interface MLContextType {
   >;
   insights: Record<string, string[]>;
   setInsights: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-  targetColumn: string;
-  setTargetColumn: React.Dispatch<React.SetStateAction<string>>;
+  targetColumn: Record<string, string>;
+  setTargetColumn: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   taskType: string;
   setTaskType: React.Dispatch<React.SetStateAction<string>>;
   modelType: string;
@@ -70,7 +70,7 @@ export function MLProvider({ children }: { children: ReactNode }) {
     Record<string, string[]>
   >({});
   const [insights, setInsights] = useState<Record<string, string[]>>({});
-  const [targetColumn, setTargetColumn] = useState<string>("");
+  const [targetColumn, setTargetColumn] = useState<Record<string, string>>({});
   const [taskType, setTaskType] = useState<string>("");
   const [modelType, setModelType] = useState<string>("");
   const [modelResults, setModelResults] = useState<Record<string, ModelResult>>(

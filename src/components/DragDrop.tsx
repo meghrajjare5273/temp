@@ -1,7 +1,6 @@
 "use client";
 
-import { MLProvider } from "@/context/MLContext";
-import { useML } from "@/context/MLContext";
+
 import { Sidebar } from "@/components/Sidebar";
 import { ProgressSteps } from "@/components/ProgressSteps";
 import { LoadingAndError } from "@/components/LoadingAndError";
@@ -11,6 +10,7 @@ import { TrainStep } from "@/components/steps/TrainStep";
 import { VisualizeStep } from "@/components/steps/VisualizeStep";
 import { DatasetSummary } from "@/components/DatasetSummary";
 import { ConfigureStep } from "./steps/ConfigureStep";
+import { MLProvider, useML } from "@/context/MLContext";
 
 // This component renders the active step based on the current state
 function ActiveStep() {

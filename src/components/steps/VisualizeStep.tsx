@@ -51,7 +51,7 @@ export function VisualizeStep() {
     preprocessedFiles,
     summaries,
     taskType,
-    targetColumn,
+    targetColumn: targetColumnMap,
   } = useML();
   const [testFiles, setTestFiles] = useState<File[]>([]);
   const [singlePoint, setSinglePoint] = useState<Record<string, string>>({});
@@ -309,10 +309,19 @@ export function VisualizeStep() {
                 preprocessedToOriginal[filename] || filename;
               const originalColumns =
                 summaries[originalFilename]?.summary.columns || [];
+
+              // Fix: Use the correct target column for the file
+              const targetColumnForFile =
+                typeof targetColumnMap === "string"
+                  ? targetColumnMap
+                  : targetColumnMap[originalFilename] || "";
+
               const features =
                 taskType === "clustering"
                   ? originalColumns
-                  : originalColumns.filter((col) => col !== targetColumn);
+                  : originalColumns.filter(
+                      (col) => col !== targetColumnForFile
+                    );
 
               return (
                 <motion.div key={filename}>

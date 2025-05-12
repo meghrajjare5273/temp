@@ -31,8 +31,20 @@ export function ConfigureStep() {
   useEffect(() => {
     if (Object.keys(suggestedTaskTypes).length)
       setTaskType(Object.values(suggestedTaskTypes)[0]);
-    if (Object.keys(suggestedTargetColumns).length)
-      setTargetColumn(Object.values(suggestedTargetColumns)[0] || "");
+
+    // Check if suggestedTargetColumns exists and has keys
+    if (Object.keys(suggestedTargetColumns).length) {
+      const firstFileName = Object.keys(suggestedTargetColumns)[0];
+      const suggestedTarget = suggestedTargetColumns[firstFileName];
+
+      // Update targetColumn for the first file with the suggested target
+      if (suggestedTarget) {
+        setTargetColumn((prev) => ({
+          ...prev,
+          [firstFileName]: suggestedTarget,
+        }));
+      }
+    }
   }, [
     suggestedTaskTypes,
     suggestedTargetColumns,
@@ -98,8 +110,13 @@ export function ConfigureStep() {
                       <Target className="h-4 w-4" /> Target Column
                     </label>
                     <select
-                      value={targetColumn}
-                      onChange={(e) => setTargetColumn(e.target.value)}
+                      value={targetColumn[filename] || ""}
+                      onChange={(e) =>
+                        setTargetColumn((prev) => ({
+                          ...prev,
+                          [filename]: e.target.value,
+                        }))
+                      }
                       className="w-full p-2 mt-1 rounded-md border border-white/10 bg-secondary-200 text-white"
                     >
                       <option value="">Select Target</option>
@@ -120,7 +137,8 @@ export function ConfigureStep() {
                   {summary.summary.columns
                     .filter(
                       (col: string) =>
-                        col !== targetColumn || taskType === "clustering"
+                        col !== targetColumn[filename] ||
+                        taskType === "clustering"
                     )
                     .map((feature: string) => (
                       <label

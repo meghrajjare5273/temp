@@ -20,7 +20,10 @@ import {
   Info,
   AlertTriangle,
 } from "lucide-react";
-import { getDownloadModelUrl, trainModelWithPreprocessed } from "@/services/api";
+import {
+  getDownloadModelUrl,
+  trainModelWithPreprocessed,
+} from "@/services/api";
 import { getAvailableModels } from "@/utils/model-utils";
 import { motion } from "motion/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -62,10 +65,19 @@ export function TrainStep() {
   useEffect(() => {
     if (Object.keys(suggestedTaskTypes).length)
       setTaskType(Object.values(suggestedTaskTypes)[0] as string);
-    if (Object.keys(suggestedTargetColumns).length)
-      setTargetColumn(
-        (Object.values(suggestedTargetColumns)[0] as string) || ""
-      );
+
+    // Set first file's target column from suggested columns
+    if (Object.keys(suggestedTargetColumns).length) {
+      const firstFileName = Object.keys(suggestedTargetColumns)[0];
+      const suggestedTarget = suggestedTargetColumns[firstFileName];
+
+      if (suggestedTarget) {
+        setTargetColumn((prev) => ({
+          ...prev,
+          [firstFileName]: suggestedTarget,
+        }));
+      }
+    }
   }, [
     suggestedTaskTypes,
     suggestedTargetColumns,
@@ -81,9 +93,11 @@ export function TrainStep() {
 
     try {
       const preprocessedFilenames = Object.values(preprocessedFiles);
+      const firstFileName = Object.keys(preprocessedFiles)[0];
+
       const data = await trainModelWithPreprocessed(
         preprocessedFilenames,
-        targetColumn,
+        targetColumn[firstFileName] || "",
         taskType,
         modelType,
         setProgress
@@ -109,6 +123,12 @@ export function TrainStep() {
   if (Object.keys(summaries).length === 0) {
     return null;
   }
+
+  // Get columns from first filename or all files
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const allColumns = Object.values(summaries)
+    .flatMap((s: any) => s.summary.columns)
+    .filter((v: any, i: any, a: any) => a.indexOf(v) === i);
 
   return (
     <motion.div
@@ -215,30 +235,42 @@ export function TrainStep() {
                   </div>
                 )}
 
-              <select
-                value={targetColumn}
-                onChange={(e) => setTargetColumn(e.target.value)}
-                className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
-                disabled={isLoading}
-              >
-                <option className="bg-primary text-black" value="">
-                  None (Unsupervised)
-                </option>
-                {Object.values(summaries)
-                  .flatMap((s: any) => s.summary.columns)
-                  .filter((v: any, i: any, a: any) => a.indexOf(v) === i)
-                  .map((col: string) => (
-                    <option
-                      className="bg-primary text-black"
-                      key={col}
-                      value={col}
-                    >
-                      {col}
+              {files.map((file) => (
+                <div key={file.name} className="mb-4">
+                  <label className="block text-sm font-medium text-white mb-1">
+                    Target Column for {file.name}
+                  </label>
+                  <select
+                    value={targetColumn[file.name] || ""}
+                    onChange={(e) =>
+                      setTargetColumn((prev) => ({
+                        ...prev,
+                        [file.name]: e.target.value,
+                      }))
+                    }
+                    className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
+                    disabled={isLoading}
+                  >
+                    <option className="bg-primary text-black" value="">
+                      None (Unsupervised)
                     </option>
-                  ))}
-              </select>
+                    {Object.entries(summaries)
+                      .filter(([filename]) => filename === file.name)
+                      .flatMap(([, s]: [string, any]) => s.summary.columns)
+                      .map((col: string) => (
+                        <option
+                          className="bg-primary text-black"
+                          key={col}
+                          value={col}
+                        >
+                          {col}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              ))}
               <p className="mt-2 text-xs text-white/50">
-                {targetColumn
+                {Object.values(targetColumn).some((v) => v)
                   ? "The column your model will learn to predict"
                   : "Select 'None' for unsupervised learning like clustering"}
               </p>

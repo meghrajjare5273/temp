@@ -49,9 +49,13 @@ export function PreprocessStep() {
 
     // Set default target column for target encoding
     if (Object.keys(suggestedTargetColumns).length) {
-      const target = Object.values(suggestedTargetColumns)[0];
+      const firstFileName = Object.keys(suggestedTargetColumns)[0];
+      const target = suggestedTargetColumns[firstFileName];
       if (target) {
-        setTargetColumn(target);
+        setTargetColumn((prev) => ({
+          ...prev,
+          [firstFileName]: target,
+        }));
       }
     }
   }, [
@@ -61,22 +65,15 @@ export function PreprocessStep() {
     setTargetColumn,
   ]);
 
-  // const handleFeatureToggle = (filename: string, column: string) => {
-  //   setSelectedFeatures((prev) => {
-  //     const current = prev[filename] || [];
-  //     if (current.includes(column)) {
-  //       return { ...prev, [filename]: current.filter((col) => col !== column) };
-  //     } else {
-  //       return { ...prev, [filename]: [...current, column] };
-  //     }
-  //   });
-  // };
-
   const handlePreprocess = async () => {
     if (!files.length) return setError("Please upload files first.");
 
     // Validate target column is selected for target-based encoding methods
-    if ((encoding === "target" || encoding === "kfold") && !targetColumn) {
+    const firstFileName = files[0].name;
+    if (
+      (encoding === "target" || encoding === "kfold") &&
+      !targetColumn[firstFileName]
+    ) {
       return setError("Please select a target column for target encoding.");
     }
 
@@ -89,7 +86,7 @@ export function PreprocessStep() {
         missingStrategy,
         scaling,
         encoding,
-        isTargetEncodingMethod ? targetColumn : "",
+        isTargetEncodingMethod ? targetColumn[firstFileName] : "",
         setProgress,
         selectedFeatures
       );
@@ -291,22 +288,34 @@ export function PreprocessStep() {
                 </h3>
               </div>
 
-              <select
-                value={targetColumn}
-                onChange={(e) => setTargetColumn(e.target.value)}
-                className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
-                disabled={isLoading}
-              >
-                <option value="">Select Target Column</option>
-                {Object.values(summaries)
-                  .flatMap((s: any) => s.summary.columns)
-                  .filter((v: any, i: any, a: any) => a.indexOf(v) === i)
-                  .map((col: string) => (
-                    <option key={col} value={col}>
-                      {col}
-                    </option>
-                  ))}
-              </select>
+              {files.map((file: File) => (
+                <div key={file.name} className="mb-4">
+                  <label className="block text-sm font-medium text-white mb-1">
+                    Target Column for {file.name}
+                  </label>
+                  <select
+                    value={targetColumn[file.name] || ""}
+                    onChange={(e) =>
+                      setTargetColumn((prev) => ({
+                        ...prev,
+                        [file.name]: e.target.value,
+                      }))
+                    }
+                    className="w-full p-3 rounded-md border border-white/10 bg-secondary-200 text-white focus:border-primary focus:ring focus:ring-primary/20 transition-all"
+                    disabled={isLoading}
+                  >
+                    <option value="">Select Target Column</option>
+                    {Object.entries(summaries)
+                      .filter(([filename]) => filename === file.name)
+                      .flatMap(([, s]: [string, any]) => s.summary.columns)
+                      .map((col: string) => (
+                        <option key={col} value={col}>
+                          {col}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              ))}
             </motion.div>
           )}
         </CardContent>
