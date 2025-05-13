@@ -93,11 +93,9 @@ export function TrainStep() {
 
     try {
       const preprocessedFilenames = Object.values(preprocessedFiles);
-      const firstFileName = Object.keys(preprocessedFiles)[0];
-
       const data = await trainModelWithPreprocessed(
         preprocessedFilenames,
-        targetColumn[firstFileName] || "",
+        JSON.stringify(targetColumn), // Send the full dictionary
         taskType,
         modelType,
         setProgress
