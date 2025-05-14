@@ -31,6 +31,7 @@ import {
 import { getChartData } from "@/utils/model-utils";
 import { motion } from "motion/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getDownloadModelUrl } from "@/services/api";
 
 // Register Chart.js components
 ChartJS.register(
@@ -44,6 +45,18 @@ ChartJS.register(
 
 export function VisualizeStep() {
   const { modelResults, setActiveStep } = useML();
+
+  const handleDownloadModel = (preprocessedFilename: string) => {
+    const baseName = preprocessedFilename
+      .split("/")
+      .pop()
+      ?.replace("preprocessed_", "");
+    if (baseName) {
+      window.location.href = getDownloadModelUrl(baseName);
+    } else {
+      console.error("Invalid preprocessed filename:", preprocessedFilename);
+    }
+  };
 
   if (Object.keys(modelResults).length === 0) {
     return null;
@@ -129,6 +142,11 @@ export function VisualizeStep() {
                             )
                           )}
                         </div>
+                      </div>
+                      <div>
+                        <Button onClick={() => handleDownloadModel(filename)}>
+                          Download Model
+                        </Button>
                       </div>
 
                       {result.feature_importance &&
