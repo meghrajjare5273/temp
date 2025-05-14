@@ -17,6 +17,7 @@ import {
   TrendingUp,
   RefreshCw,
   ArrowRight,
+  FileDown,
 } from "lucide-react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -89,7 +90,7 @@ export function VisualizeStep() {
               >
                 <div className="bg-secondary-200 p-4 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary/20 rounded-full items-end">
                       {result.task_type === "classification" ? (
                         <PieChart className="h-5 w-5 text-primary" />
                       ) : result.task_type === "regression" ? (
@@ -105,6 +106,14 @@ export function VisualizeStep() {
                       <p className="text-sm text-white/50">
                         {result.task_type} model using {result.model_type}
                       </p>
+                    </div>
+                    <div className="flex justify-evenly gap-8">
+                      <Button
+                        onClick={() => handleDownloadModel(filename)}
+                        className="w-full bg-primary hover:bg-secondary/90 hover:text-white text-black font-semibold border-2 flex items-center justify-center"
+                      >
+                        <FileDown className="mr-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -142,11 +151,6 @@ export function VisualizeStep() {
                             )
                           )}
                         </div>
-                      </div>
-                      <div>
-                        <Button onClick={() => handleDownloadModel(filename)}>
-                          Download Model
-                        </Button>
                       </div>
 
                       {result.feature_importance &&
