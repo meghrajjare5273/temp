@@ -50,7 +50,7 @@ class MemoryManager:
         return psutil.virtual_memory().used / (1024**3)
     
     @staticmethod
-    def check_memory_limit(max_memory_gb: float = 4.0) -> bool:
+    def check_memory_limit(max_memory_gb: float = 16.0) -> bool:
         """Check if memory usage is within limits"""
         current_usage = MemoryManager.get_memory_usage_gb()
         return current_usage < max_memory_gb
@@ -94,7 +94,7 @@ class MemoryManager:
 class AsyncModelTrainer:
     """Asynchronous model trainer with memory management and progress tracking"""
     
-    def __init__(self, max_memory_gb: float = 4.0, max_workers: Optional[int] = None):
+    def __init__(self, max_memory_gb: float = 16.0, max_workers: Optional[int] = None):
         """Initialize the async model trainer"""
         self.max_memory_gb = max_memory_gb
         self.max_workers = max_workers or min(4, multiprocessing.cpu_count())
